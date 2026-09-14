@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘 저녁 뭐 먹지? | 저녁 메뉴 추천</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+
+        /* 버튼 스타일 */
+        .btn {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn:hover {
+            background-color: #ee5253;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* 카테고리 필터 */
+        .category-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-btn {
+            background: #edf2f7;
+            border: 1px solid #cbd5e0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        .category-btn.active {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+
+        /* 디스플레이 영역 */
+        .result-box {
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #fff5f5;
+            border-radius: 12px;
+            border: 2px dashed #ff8e53;
+        }
+
+        .result-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .result-category {
+            font-size: 0.9rem;
+            color: #e53e3e;
+            background: #fed7d7;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 리스트 스타일 */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .menu-item {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>오늘 저녁 뭐 먹지? 🍽️</h1>
+        <p>결정 장애를 해결해주는 저녁 메뉴 추천기</p>
+    </header>
+
+    <div class="container">
+        <!-- 랜덤 추천 카드 -->
+        <div class="card">
+            <h2>🎲 랜덤 메뉴 추천</h2>
+            
+            <div class="category-group" id="categoryGroup">
+                <button class="category-btn active" onclick="setCategory('전체')">전체</button>
+                <button class="category-btn" onclick="setCategory('한식')">한식</button>
+                <button class="category-btn" onclick="setCategory('일식')">일식</button>
+                <button class="category-btn" onclick="setCategory('중식')">중식</button>
+                <button class="category-btn" onclick="setCategory('양식')">양식</button>
+                <button class="category-btn" onclick="setCategory('분식/기타')">분식/기타</button>
+            </div>
+
+            <div class="result-box">
+                <span class="result-category" id="resultCategory" style="display: none;">한식</span>
+                <div class="result-title" id="resultTitle">버튼을 눌러주세요!</div>
+            </div>
+
+            <button class="btn" onclick="pickRandomMenu()">메뉴 뽑기!</button>
+        </div>
+
+        <!-- 메뉴 목록 카드 -->
+        <div class="card">
+            <h2>📋 추천 메뉴 목록</h2>
+            <div class="menu-grid" id="menuList">
+                <!-- 자바스크립트로 메뉴 목록이 들어갑니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuData = [
+            // 한식
+            { name: "김치찌개", category: "한식" },
+            { name: "된장찌개", category: "한식" },
+            { name: "제육볶음", category: "한식" },
+            { name: "삼겹살", category: "한식" },
+            { name: "비빔밥", category: "한식" },
+            { name: "닭볶음탕", category: "한식" },
+            { name: "국밥", category: "한식" },
+            
+            // 일식
+            { name: "초밥", category: "일식" },
+            { name: "돈가스", category: "일식" },
+            { name: "라멘", category: "일식" },
+            { name: "우동", category: "일식" },
+            { name: "규동", category: "일식" },
+            
+            // 중식
+            { name: "짜장면", category: "중식" },
+            { name: "짬뽕", category: "중식" },
+            { name: "탕수육", category: "중식" },
+            { name: "마라탕", category: "중식" },
+            { name: "볶음밥", category: "중식" },
+
+            // 양식
+            { name: "파스타", category: "양식" },
+            { name: "피자", category: "양식" },
+            { name: "스테이크", category: "양식" },
+            { name: "햄버거", category: "양식" },
+
+            // 분식/기타
+            { name: "떡볶이", category: "분식/기타" },
+            { name: "족발/보쌈", category: "분식/기타" },
+            { name: "치킨", category: "분식/기타" },
+            { name: "월남쌈", category: "분식/기타" }
+        ];
+
+        let selectedCategory = "전체";
+        let isSpinning = false;
+
+        // 카테고리 변경 함수
+        function setCategory(category) {
+            selectedCategory = category;
+            
+            // 버튼 스타일 변경
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => {
+                if (btn.innerText === category) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            renderMenuList();
+        }
+
+        // 메뉴 목록 출력 함수
+        function renderMenuList() {
+            const menuListEl = document.getElementById('menuList');
+            menuListEl.innerHTML = '';
+
+            const filteredMenu = selectedCategory === "전체" 
+                ? menuData 
+                : menuData.filter(item => item.category === selectedCategory);
+
+            filteredMenu.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'menu-item';
+                div.innerText = item.name;
+                menuListEl.appendChild(div);
+            });
+        }
+
+        // 랜덤 메뉴 뽑기 함수 (애니메이션 효과)
+        function pickRandomMenu() {
+            if (isSpinning) return;
+
+            const filteredMenu = selectedCategory === "전체" 
+                ? menuData 
+                : menuData.filter(item => item.category === selectedCategory);
+
+            if (filteredMenu.length === 0) return;
+
+            isSpinning = true;
+            const resultTitle = document.getElementById('resultTitle');
+            const resultCategory = document.getElementById('resultCategory');
+            
+            let counter = 0;
+            const maxCounts = 20; // 스롯모션 횟수
+            const speed = 50; // 속도 (ms)
+
+            const interval = setInterval(() => {
+                const tempPick = filteredMenu[Math.floor(Math.random() * filteredMenu.length)];
+                resultTitle.innerText = tempPick.name;
+                resultCategory.style.display = "inline-block";
+                resultCategory.innerText = tempPick.category;
+                
+                counter++;
+
+                if (counter >= maxCounts) {
+                    clearInterval(interval);
+                    const finalPick = filteredMenu[Math.floor(Math.random() * filteredMenu.length)];
+                    resultTitle.innerText = finalPick.name;
+                    resultCategory.innerText = finalPick.category;
+                    isSpinning = false;
+                }
+            }, speed);
+        }
+
+        // 초기 화면 설정
+        renderMenuList();
+    </script>
+</body>
+</html>
