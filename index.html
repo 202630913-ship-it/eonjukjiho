@@ -1,125 +1,143 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YumStraw - 먹을 수 있는 빨대 샤핑 & 탐색기</title>
+    <title>EcoStraw - 먹을 수 있는 빨대 & 맛 탐색기</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- FontAwesome for fallback styling -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        ecoGreen: '#2D6A4F',
+                        ecoLightGreen: '#D8F3DC',
+                        ecoMint: '#74C69D',
+                        strawBerry: '#FF6B6B',
+                        strawChoco: '#6F4E37',
+                        strawCaramel: '#D97706',
+                        strawApple: '#10B981',
+                        strawCoffee: '#4A3B32',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
-        body {
-            font-family: 'Pretendard', sans-serif;
-            background-color: #fdfbf7;
+        .gradient-bg {
+            background: linear-gradient(135deg, #E8F5E9 0%, #FFF3E0 100%);
         }
-        .straw-bubble {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        .custom-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
-        .straw-gradient-rice { background: linear-gradient(135deg, #FFF9E6 0%, #F5E6CA 100%); }
-        .straw-gradient-candy { background: linear-gradient(135deg, #FFE3E3 0%, #FFB1B1 100%); }
-        .straw-gradient-jelly { background: linear-gradient(135deg, #E6F9E6 0%, #A2E8A2 100%); }
-        .straw-gradient-coffee { background: linear-gradient(135deg, #EFE3D3 0%, #D3B89E 100%); }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
         }
     </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 font-sans text-slate-800 antialiased selection:bg-ecoMint selection:text-white">
 
     <!-- Navigation Bar -->
-    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-amber-100/80 transition-all">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="scrollToTop()">
-                <div class="w-10 h-10 rounded-full bg-amber-400 flex items-center justify-center text-white text-xl font-black shadow-inner">
-                    🥤
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-emerald-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white text-xl shadow-md group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-seedling"></i>
                 </div>
                 <div>
-                    <span class="text-xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">YumStraw</span>
-                    <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full ml-1 font-semibold">맛있는 빨대</span>
+                    <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-800 to-teal-600 bg-clip-text text-transparent">EcoStraw</span>
+                    <span class="block text-xs font-semibold text-emerald-600">먹는 빨대 메뉴 Store</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <div class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+                <a href="#menu" class="hover:text-emerald-600 transition-colors">빨대 맛 메뉴</a>
+                <a href="#recommend" class="hover:text-emerald-600 transition-colors">음료 맞춤 추천</a>
+                <a href="#simulator" class="hover:text-emerald-600 transition-colors">맛 & 식감 가이드</a>
+                <a href="#eco-calc" class="hover:text-emerald-600 transition-colors">에코 계산기</a>
+            </div>
+
+            <!-- Header Right: Eco Stat & Cart Badge -->
+            <div class="flex items-center gap-4">
+                <div class="hidden lg:flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200 text-xs text-emerald-700 font-medium">
+                    <i class="fa-solid fa-leaf text-emerald-500"></i>
+                    <span>누적 플라스틱 절감: <strong id="global-eco-count" class="text-emerald-800 font-bold">128,450</strong>개</span>
+                </div>
+
+                <button onclick="openCartModal()" class="relative p-2.5 rounded-xl bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-700 transition-all flex items-center justify-center">
+                    <i class="fa-solid fa-basket-shopping text-lg"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="gradient-bg py-16 lg:py-24 px-4 overflow-hidden relative">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6 text-center md:text-left">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider shadow-sm">
+                    <i class="fa-solid fa-sparkles"></i> 100% 친환경 & 식용 가능 빨대
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight">
+                    지구를 구하는 <br class="hidden sm:inline"/>
+                    <span class="bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500 bg-clip-text text-transparent">맛있는 습관!</span><br/>
+                    먹을 수 있는 빨대
+                </h1>
+                <p class="text-slate-600 text-base sm:text-lg max-w-xl mx-auto md:mx-0 font-normal">
+                    음료를 다 마신 후 바삭하거나 쫀득하게 씹어 먹는 디저트 빨대! 쌀, 초콜릿, 딸기, 커피, 카라멜까지 원하는 취향과 음료에 딱 맞는 빨대를 탐색해보세요.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2">
+                    <a href="#menu" class="px-7 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base shadow-lg shadow-emerald-600/30 transition-all text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-utensils"></i> 빨대 & 맛 둘러보기
+                    </a>
+                    <a href="#recommend" class="px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-base border border-slate-200 shadow-sm transition-all text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> 음료 맞춤 추천받기
+                    </a>
                 </div>
             </div>
 
-            <nav class="hidden md:flex space-x-8 font-medium text-sm text-slate-600">
-                <a href="#menu" class="hover:text-amber-600 transition">빨대 메뉴 & 맛</a>
-                <a href="#recommender" class="hover:text-amber-600 transition">음료 궁합 추천</a>
-                <a href="#simulator" class="hover:text-amber-600 transition">맛 시뮬레이터</a>
-            </nav>
-
-            <button onclick="openCartModal()" class="relative p-2.5 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-700 transition flex items-center gap-2">
-                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                <span class="hidden sm:inline font-bold text-sm">장바구니</span>
-                <span id="cart-badge" class="bg-amber-500 text-white text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center">0</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-gradient-to-b from-amber-50/60 to-transparent py-12 md:py-20">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 bg-amber-100/80 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-full text-xs font-bold">
-                        <span class="animate-pulse">🌱</span> 100% 분해 & 씹어먹는 친환경 빨대
+            <!-- Hero Graphic Interactive Card -->
+            <div class="relative flex justify-center">
+                <div class="w-full max-w-md bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-white/60 shadow-xl relative z-10">
+                    <div class="flex items-center justify-between mb-4 border-b pb-3">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">오늘의 인기 맛 베스트</span>
+                        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-fire mr-1"></i> HOT</span>
                     </div>
-                    <h1 class="text-3xl sm:text-5xl font-black text-slate-900 leading-tight">
-                        음료를 다 마신 후,<br>
-                        <span class="bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 bg-clip-text text-transparent">맛있게 씹어먹는 빨대!</span>
-                    </h1>
-                    <p class="text-base sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0">
-                        지구를 지키는 가장 달콤하고 고소한 방법! 쌀, 사탕, 젤리, 커피박으로 만든 
-                        다양한 재료와 매력적인 맛의 빨대를 만나보세요.
-                    </p>
-                    <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
-                        <a href="#menu" class="px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-lg shadow-amber-200 transition transform hover:-translate-y-0.5">
-                            메뉴 탐색하기 🍹
-                        </a>
-                        <a href="#simulator" class="px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold rounded-2xl shadow-sm transition">
-                            시간별 맛 체험하기 ⏱️
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Hero Graphic Card Showcase -->
-                <div class="relative flex justify-center">
-                    <div class="w-full max-w-md bg-white p-6 rounded-3xl border border-amber-100 shadow-xl relative overflow-hidden">
-                        <div class="absolute -right-8 -top-8 w-32 h-32 bg-amber-100 rounded-full blur-2xl opacity-60"></div>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-extrabold tracking-wider uppercase text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg">Popular Choice</span>
-                            <span class="text-xs text-slate-400">친환경 소재 100%</span>
-                        </div>
-                        <div class="text-center py-6 bg-amber-50/50 rounded-2xl mb-4 border border-dashed border-amber-200">
-                            <div class="text-6xl mb-2 animate-bounce">🌾</div>
-                            <h3 class="text-xl font-bold text-slate-800">바삭고소 쌀 빨대</h3>
-                            <p class="text-xs text-amber-700 mt-1">누룽지 / 고소한 맛 / 플레인</p>
-                        </div>
-                        <div class="space-y-2 text-xs text-slate-600">
-                            <div class="flex justify-between py-1 border-b border-slate-100">
-                                <span>음료 보존 시간</span>
-                                <span class="font-bold text-slate-800">최대 2~3시간</span>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 p-3 rounded-2xl bg-red-50/80 border border-red-100">
+                            <div class="w-12 h-12 rounded-xl bg-red-500 text-white flex items-center justify-center text-xl shrink-0">🍓</div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-800">딸기 젤리 빨대</h4>
+                                <p class="text-xs text-slate-500">상큼달콤한 딸기향 / 에이드, 스무디에 완벽!</p>
                             </div>
-                            <div class="flex justify-between py-1 border-b border-slate-100">
-                                <span>식감 / 재질</span>
-                                <span class="font-bold text-slate-800">바삭바삭한 누룽지 식감</span>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 rounded-2xl bg-amber-900/10 border border-amber-900/20">
+                            <div class="w-12 h-12 rounded-xl bg-amber-800 text-white flex items-center justify-center text-xl shrink-0">🍫</div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-800">초코 사탕 빨대</h4>
+                                <p class="text-xs text-slate-500">진한 초콜릿맛 / 우유, 핫코코아 추천</p>
                             </div>
-                            <div class="flex justify-between py-1">
-                                <span>플라스틱 절감 효과</span>
-                                <span class="font-bold text-emerald-600">개당 -1.5g CO2</span>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-100">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl shrink-0">🌾</div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-800">쌀 빨대 (고소한맛)</h4>
+                                <p class="text-xs text-slate-500">은은한 숭늉맛 / 최대 3시간 유지되는 단단함</p>
                             </div>
                         </div>
                     </div>
@@ -128,91 +146,71 @@
         </div>
     </section>
 
-    <!-- Straw Menu Section -->
-    <section id="menu" class="py-16 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Edible Straw Product Showcase -->
+    <section id="menu" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-emerald-600 font-bold text-sm tracking-widest uppercase">Flavor & Product Menu</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">취향대로 골라먹는 빨대 라인업</h2>
+            <p class="text-slate-500 mt-2">각 빨대의 유지 시간, 추천 음료 pairing, 식감을 한눈에 비교하고 직접 맛을 탐색해 보세요.</p>
+        </div>
+
+        <!-- Filter Category Buttons -->
+        <div class="flex flex-wrap justify-center gap-2 mb-10" id="filter-buttons">
+            <button onclick="filterMenu('all')" class="filter-btn active bg-emerald-600 text-white px-5 py-2 rounded-xl font-semibold text-sm transition-all shadow-sm">전체 보기</button>
+            <button onclick="filterMenu('sweet')" class="filter-btn bg-white hover:bg-slate-100 text-slate-600 px-5 py-2 rounded-xl font-semibold text-sm transition-all border border-slate-200">달콤/디저트계열</button>
+            <button onclick="filterMenu('crispy')" class="filter-btn bg-white hover:bg-slate-100 text-slate-600 px-5 py-2 rounded-xl font-semibold text-sm transition-all border border-slate-200">바삭/고소계열</button>
+            <button onclick="filterMenu('fruity')" class="filter-btn bg-white hover:bg-slate-100 text-slate-600 px-5 py-2 rounded-xl font-semibold text-sm transition-all border border-slate-200">상큼/과일계열</button>
+        </div>
+
+        <!-- Straw Grid Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="straw-grid">
+            <!-- Cards will be populated dynamically by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Interactive Drink & Straw Pairing Wizard -->
+    <section id="recommend" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center max-w-2xl mx-auto mb-12">
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">먹는 빨대 메뉴 & 맛 가이드</h2>
-                <p class="text-slate-500 mt-2 text-sm sm:text-base">원하는 재료 타입을 선택하고 취향에 딱 맞는 맛을 골라보세요!</p>
+                <span class="text-emerald-400 font-bold text-sm tracking-widest uppercase"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Pairing Wizard</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold mt-1">내가 마시는 음료와 딱 맞는 빨대는?</h2>
+                <p class="text-slate-400 mt-2">지금 마시고 싶은 음료를 선택하시면, 최적의 맛 조합과 궁합을 자랑하는 빨대를 추천해드립니다!</p>
             </div>
 
-            <!-- Material Category Filter Tabs -->
-            <div class="flex flex-wrap justify-center gap-2 mb-10" id="category-tabs">
-                <!-- Dynamic Tabs injected via JS -->
+            <!-- Drink Selection Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 max-w-4xl mx-auto mb-10" id="drink-options">
+                <button onclick="recommendStraw('americano')" class="drink-option-btn p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition-all text-center group">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">☕</div>
+                    <div class="font-bold text-sm text-slate-200">아이스 아메리카노</div>
+                </button>
+                <button onclick="recommendStraw('milk')" class="drink-option-btn p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition-all text-center group">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🥛</div>
+                    <div class="font-bold text-sm text-slate-200">따뜻한 우유 / 코코아</div>
+                </button>
+                <button onclick="recommendStraw('smoothie')" class="drink-option-btn p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition-all text-center group">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🍓</div>
+                    <div class="font-bold text-sm text-slate-200">딸기 스무디</div>
+                </button>
+                <button onclick="recommendStraw('lemonade')" class="drink-option-btn p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition-all text-center group">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🍋</div>
+                    <div class="font-bold text-sm text-slate-200">상큼한 에이드류</div>
+                </button>
+                <button onclick="recommendStraw('milktea')" class="drink-option-btn p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition-all text-center group">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🧋</div>
+                    <div class="font-bold text-sm text-slate-200">밀크티 / 라떼</div>
+                </button>
             </div>
 
-            <!-- Straw Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="straw-cards-container">
-                <!-- Cards injected via JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Recommendation Section -->
-    <section id="recommender" class="py-16 bg-gradient-to-br from-orange-50 via-amber-50/30 to-amber-100/40">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-amber-100">
-                <div class="text-center mb-8">
-                    <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Smart Pairing</span>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">내가 마실 음료와 어울리는 빨대는?</h2>
-                    <p class="text-slate-500 text-sm mt-1">음료 종류를 선택하시면 가장 맛있는 빨대 궁합을 추천해 드립니다.</p>
-                </div>
-
-                <!-- Drink Selection Grid -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8" id="drink-selector">
-                    <!-- Drink Buttons Injected by JS -->
-                </div>
-
-                <!-- Recommendation Result Box -->
-                <div id="recommendation-result" class="hidden bg-slate-50 rounded-2xl p-6 border border-slate-200 transition-all">
-                    <!-- Injected by JS -->
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Eating Straw Experience Simulator -->
-    <section id="simulator" class="py-16 bg-white">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-10">
-                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Interactive Simulator</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">시간에 따른 빨대의 맛과 식감 체험</h2>
-                <p class="text-slate-500 text-sm mt-1">음료를 마시는 시간에 따라 빨대의 식감과 맛이 어떻게 변화하는지 확인해보세요.</p>
-            </div>
-
-            <div class="bg-amber-50/60 rounded-3xl p-6 sm:p-8 border border-amber-100">
-                <!-- Select Straw for Simulation -->
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-white p-4 rounded-2xl border border-amber-100 shadow-sm">
-                    <label class="font-bold text-slate-700 text-sm sm:text-base">체험할 빨대 종류 선택:</label>
-                    <select id="sim-straw-select" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400">
-                        <option value="rice">🌾 쌀 빨대 (누룽지맛)</option>
-                        <option value="candy">🍬 사탕 빨대 (딸기맛)</option>
-                        <option value="jelly">🍇 젤리 빨대 (포도맛)</option>
-                        <option value="coffee">☕ 커피박 빨대 (은은한 커피향)</option>
-                    </select>
-                </div>
-
-                <!-- Slider Control -->
-                <div class="space-y-6">
-                    <div class="flex justify-between items-center font-bold">
-                        <span class="text-slate-600 text-sm">경과 시간:</span>
-                        <span id="sim-time-text" class="text-amber-600 text-lg font-black bg-white px-3 py-1 rounded-lg border border-amber-200">0분 (막 마시기 시작함)</span>
-                    </div>
-
-                    <input type="range" id="sim-time-range" min="0" max="60" value="0" step="15" 
-                           class="w-full h-3 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
-
-                    <div class="flex justify-between text-xs text-slate-400 font-medium px-1">
-                        <span>0분 (직후)</span>
-                        <span>15분 (음료 중간)</span>
-                        <span>30분 (음료 완료)</span>
-                        <span>60분 (후식 타임)</span>
-                    </div>
-
-                    <!-- Visual Feedback Box -->
-                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm transition-all duration-300 min-h-[160px] flex flex-col justify-center">
-                        <div id="sim-feedback-content" class="text-center space-y-3">
-                            <!-- Feedback injected dynamically -->
+            <!-- Result Box -->
+            <div id="pairing-result" class="max-w-3xl mx-auto bg-slate-800 border border-emerald-500/40 rounded-3xl p-6 sm:p-8 hidden">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div id="result-icon" class="text-6xl p-5 bg-slate-700 rounded-2xl shrink-0"></div>
+                    <div class="flex-1 text-center md:text-left space-y-2">
+                        <div class="inline-block bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-bold">Best Match Match!</div>
+                        <h3 id="result-title" class="text-2xl font-bold text-white"></h3>
+                        <p id="result-desc" class="text-slate-300 text-sm leading-relaxed"></p>
+                        <div class="pt-3 flex flex-wrap gap-3 justify-center md:justify-start" id="result-actions">
+                            <!-- Action button injected via JS -->
                         </div>
                     </div>
                 </div>
@@ -220,462 +218,510 @@
         </div>
     </section>
 
-    <!-- Shopping Cart & Order Modal -->
-    <div id="cart-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl transform transition-all relative max-h-[90vh] flex flex-col justify-between">
-            <button onclick="closeCartModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
+    <!-- Flavor Taste Simulator & Eating Guide -->
+    <section id="simulator" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-emerald-600 font-bold text-sm tracking-widest uppercase">Taste & Texture Stage</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">먹는 빨대 단계별 식감 체험 가이드</h2>
+            <p class="text-slate-500 mt-2">시간의 흐름에 따라 빨대가 어떻게 변화하고 맛을 내는지 직접 체험해보세요.</p>
+        </div>
 
-            <div>
-                <div class="flex items-center gap-2 mb-4">
-                    <i data-lucide="shopping-cart" class="text-amber-500 w-6 h-6"></i>
-                    <h3 class="text-xl font-bold text-slate-900">내 빨대 장바구니</h3>
-                </div>
-
-                <!-- Items List -->
-                <div id="cart-items-container" class="space-y-3 max-h-56 overflow-y-auto my-4 pr-1">
-                    <!-- Items injected by JS -->
-                </div>
-
-                <!-- Environmental Impact Banner -->
-                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 my-4">
-                    <div class="flex items-center gap-2 text-emerald-800 font-bold text-sm mb-1">
-                        🌱 environmental impact (친환경 미소 지수)
-                    </div>
-                    <p class="text-xs text-emerald-700">
-                        이번 선택으로 플라스틱 쓰레기 <span id="eco-plastic-saved" class="font-bold text-emerald-900">0</span>g 절감 & 
-                        해양 생물 보호 효과를 얻었습니다!
-                    </p>
-                </div>
+        <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 custom-shadow max-w-4xl mx-auto">
+            <!-- Stage Tabs -->
+            <div class="grid grid-cols-3 gap-2 mb-8 bg-slate-100 p-1.5 rounded-2xl">
+                <button onclick="setSimStage(1)" id="sim-tab-1" class="sim-tab active py-3 rounded-xl font-bold text-sm transition-all bg-white text-emerald-700 shadow-sm">
+                    1단계: 음료 마시기
+                </button>
+                <button onclick="setSimStage(2)" id="sim-tab-2" class="sim-tab py-3 rounded-xl font-bold text-sm transition-all text-slate-500 hover:text-slate-800">
+                    2단계: 음료 다 마신 후
+                </button>
+                <button onclick="setSimStage(3)" id="sim-tab-3" class="sim-tab py-3 rounded-xl font-bold text-sm transition-all text-slate-500 hover:text-slate-800">
+                    3단계: 맛있게 씹어먹기
+                </button>
             </div>
 
-            <div class="border-t border-slate-100 pt-4 space-y-3">
-                <div class="flex justify-between text-base font-bold text-slate-800">
-                    <span>총 합계 금액:</span>
-                    <span id="cart-total-price" class="text-amber-600 font-black text-xl">0원</span>
+            <!-- Stage Content Display -->
+            <div id="sim-content" class="min-h-[220px] flex flex-col md:flex-row items-center gap-8">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Eco Impact Calculator -->
+    <section id="eco-calc" class="py-20 bg-emerald-50/70 border-y border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-emerald-600 font-bold text-sm tracking-widest uppercase">Eco Calculator</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">나의 환경 보호 기여도 계산기</h2>
+                <p class="text-slate-500 mt-2">내가 하루에 사용하는 빨대를 먹는 빨대로 바꿨을 때 환경에 미치는 긍정적 변화를 확인하세요.</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto bg-white rounded-3xl p-8 border border-emerald-200/80 custom-shadow space-y-8">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <label for="straw-count" class="font-bold text-slate-800 text-lg">하루 평균 사용 빨대 개수:</label>
+                        <span class="text-2xl font-extrabold text-emerald-600"><span id="straw-count-val">3</span>개</span>
+                    </div>
+                    <input type="range" id="straw-count" min="1" max="20" value="3" oninput="updateEcoCalc(this.value)" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
                 </div>
-                <button onclick="checkout()" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-md transition text-center">
-                    주문 신청하기 (시뮬레이션)
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t">
+                    <div class="p-4 rounded-2xl bg-emerald-50 text-center border border-emerald-100">
+                        <div class="text-xs font-semibold text-emerald-600 mb-1">연간 줄이는 플라스틱 빨대</div>
+                        <div class="text-2xl font-black text-emerald-800" id="calc-straws">1,095개</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-amber-50 text-center border border-amber-100">
+                        <div class="text-xs font-semibold text-amber-600 mb-1">연간 탄소 절감량(CO2)</div>
+                        <div class="text-2xl font-black text-amber-800" id="calc-co2">1,642 g</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-teal-50 text-center border border-teal-100">
+                        <div class="text-xs font-semibold text-teal-600 mb-1">내 나무 심기 효과</div>
+                        <div class="text-2xl font-black text-teal-800" id="calc-trees">약 0.25 그루</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Straw Detail Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-xl rounded-3xl p-6 sm:p-8 relative shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeDetailModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-2 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modal-body">
+                <!-- Dynamically populated modal content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-3xl p-6 sm:p-8 relative shadow-2xl space-y-6">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-basket-shopping text-emerald-600"></i> 장바구니 / 주문 샘플
+                </h3>
+                <button onclick="closeCartModal()" class="text-slate-400 hover:text-slate-600 p-2 text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="cart-items" class="space-y-4 max-h-60 overflow-y-auto pr-2">
+                <!-- Cart items list dynamically filled -->
+            </div>
+
+            <div class="border-t pt-4 space-y-3">
+                <div class="flex justify-between font-extrabold text-lg">
+                    <span>총 결제금액:</span>
+                    <span id="cart-total-price" class="text-emerald-600">0원</span>
+                </div>
+                <button onclick="simulateOrder()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-extrabold text-base transition-all shadow-lg shadow-emerald-600/30">
+                    주문 시뮬레이션 완료하기
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-xl shadow-xl transition-all duration-300 transform translate-y-20 opacity-0 z-50 flex items-center gap-2">
-        <i data-lucide="check-circle" class="text-emerald-400 w-5 h-5"></i>
-        <span id="toast-message">알림 메시지</span>
+    <!-- Custom Toast Message -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-message" class="text-sm font-semibold">메시지 들어가는 곳</span>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 mt-12">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs space-y-3">
-            <p class="font-semibold text-slate-300">🥤 YumStraw - 친환경 먹는 빨대 체험 플랫폼</p>
-            <p>본 웹사이트는 먹을 수 있는 빨대 메뉴 및 맛 정보를 안내하는 데모 프로그램입니다.</p>
-            <p class="text-slate-600">© 2026 YumStraw Inc. All rights reserved.</p>
+    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 text-sm">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <p class="font-bold text-slate-200">EcoStraw · 먹을 수 있는 빨대 맛 탐색/추천 스토어</p>
+            <p class="text-xs text-slate-500">본 페이지는 친환경 먹는 빨대의 맛과 식감을 경험하고 체험하기 위해 제작된 인터랙티브 웹 프로그램입니다.</p>
+            <p class="text-xs text-slate-600">© 2026 EcoStraw Experience Center. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Application Logic (JavaScript) -->
     <script>
-        // Data Structure for Edible Straws
-        const STRAW_DATA = [
+        // Straw Database
+        const strawData = [
             {
                 id: 'rice',
                 name: '쌀 빨대 (Rice Straw)',
-                category: 'rice',
-                categoryLabel: '🌾 쌀 / 곡물',
+                category: 'crispy',
+                flavor: '은은한 숭늉맛 & 고소한 쌀향',
+                texture: '바삭바삭 쌀과자 식감',
+                duration: '2~3 시간 유지',
+                pairing: '아이스 아메리카노, 누룽지 라떼, 식혜',
+                price: 3500,
+                priceUnit: '10개입 세트',
+                badgeBg: 'bg-emerald-100 text-emerald-800',
                 icon: '🌾',
-                bgGradient: 'straw-gradient-rice',
-                borderColor: 'border-amber-200',
-                price: 150,
-                desc: '100% 쌀과 타피오카로 제조. 음료에 담가둬도 불지 않으며 마신 후 고소하게 씹어먹습니다.',
-                flavors: [
-                    { name: '누룽지맛', badge: '인기 🔥', color: 'bg-amber-100 text-amber-800' },
-                    { name: '고소한 쌀맛', badge: '기본 ✨', color: 'bg-stone-100 text-stone-800' },
-                    { name: '플레인', badge: '깔끔 👍', color: 'bg-slate-100 text-slate-800' }
-                ],
-                durability: '2~3시간 유지',
-                texture: '바삭바삭 & 누룽지 식감'
+                imageColor: 'from-amber-100 to-emerald-100',
+                description: '100% 쌀과 타피오카로 제작되어 음료 안에서 최대 3시간 동안 단단함을 유지합니다. 음료를 마신 후 바삭한 오도독 과자처럼 부담 없이 즐기실 수 있습니다.',
+                nutritional: '원재료: 쌀가루 70%, 타피오카 전분 30% / 열량: 개당 15kcal'
             },
             {
-                id: 'candy',
-                name: '사탕 빨대 (Candy Straw)',
-                category: 'candy',
-                categoryLabel: '🍬 사탕수수 / 캔디',
-                icon: '🍬',
-                bgGradient: 'straw-gradient-candy',
-                borderColor: 'border-pink-200',
-                price: 300,
-                desc: '천연 과일향과 사탕수수로 만든 달콤한 빨대. 음료에 은은한 달콤함을 더해줍니다.',
-                flavors: [
-                    { name: '딸기맛', badge: '달콤 🍓', color: 'bg-pink-100 text-pink-800' },
-                    { name: '초코맛', badge: '진한 🍫', color: 'bg-orange-100 text-orange-900' },
-                    { name: '바나나맛', badge: '부드러운 🍌', color: 'bg-yellow-100 text-yellow-800' },
-                    { name: '사과맛', badge: '상큼 🍏', color: 'bg-green-100 text-green-800' }
-                ],
-                durability: '1~1.5시간 유지',
-                texture: '단단하고 달콤한 사탕 식감'
+                id: 'choco',
+                name: '초코 사탕 빨대 (Choco Candy)',
+                category: 'sweet',
+                flavor: '달콤하고 진한 카카오 초콜릿맛',
+                texture: '달달한 캔디 & 유기농 디저트',
+                duration: '1.5~2 시간 유지',
+                pairing: '따뜻한 우유, 핫코코아, 바닐라 셰이크',
+                price: 4200,
+                priceUnit: '10개입 세트',
+                badgeBg: 'bg-amber-100 text-amber-900',
+                icon: '🍫',
+                imageColor: 'from-amber-200 to-amber-900/20',
+                description: '진한 카카오 향이 살포시 배어 나오는 초콜릿 캔디 제형 빨대입니다. 따뜻한 우유나 라떼에 사용하면 음료 끝맛에 은은한 초코 풍미가 더해집니다.',
+                nutritional: '원재료: 천연 카카오 파우더, 자일로스 설탕 / 열량: 개당 28kcal'
             },
             {
-                id: 'jelly',
-                name: '젤리 빨대 (Jelly Straw)',
-                category: 'jelly',
-                categoryLabel: '🍇 젤리 / 우뭇가사리',
-                icon: '🍇',
-                bgGradient: 'straw-gradient-jelly',
-                borderColor: 'border-emerald-200',
-                price: 250,
-                desc: '해조류 우뭇가사리와 과즙으로 만든 탱글탱글한 빨대. 음료 마시는 재미를 선사합니다.',
-                flavors: [
-                    { name: '포도맛', badge: '새콤 🍇', color: 'bg-purple-100 text-purple-800' },
-                    { name: '복숭아맛', badge: '베스트 🍑', color: 'bg-rose-100 text-rose-800' },
-                    { name: '청포도맛', badge: '청량 🟢', color: 'bg-emerald-100 text-emerald-800' }
-                ],
-                durability: '45분~1시간 유지',
-                texture: '쫄깃하고 쫀득한 젤리 식감'
+                id: 'strawberry',
+                name: '딸기 젤리 빨대 (Strawberry Gummy)',
+                category: 'fruity',
+                flavor: '상큼달콤 천연 딸기향',
+                texture: '말랑말랑 쫀득한 젤리 식감',
+                duration: '1~1.5 시간 유지',
+                pairing: '딸기 스무디, 레몬 에이드, 탄산수',
+                price: 4000,
+                priceUnit: '10개입 세트',
+                badgeBg: 'bg-red-100 text-red-800',
+                icon: '🍓',
+                imageColor: 'from-pink-100 to-red-100',
+                description: '에이드나 과일 스무디에 제격인 딸기향 빨대입니다. 음료 수분을 흡수하면서 점차 말랑해져 음료를 다 마신 후 쫀득한 젤리로 맛있게 간식 섭취가 가능합니다.',
+                nutritional: '원재료: 동결건조 딸기분말, 우뭇가사리, 펙틴 / 열량: 개당 20kcal'
             },
             {
                 id: 'coffee',
-                name: '커피박 빨대 (Coffee Straw)',
-                category: 'coffee',
-                categoryLabel: '☕ 커피박 / 곡물',
+                name: '커피박 빨대 (Coffee Grounds)',
+                category: 'crispy',
+                flavor: '은은한 에스프레소 아로마 향',
+                texture: '단단하고 깔끔한 식감',
+                duration: '2~3 시간 유지',
+                pairing: '아메리카노, 카페라떼, 콜드브루',
+                price: 3800,
+                priceUnit: '10개입 세트',
+                badgeBg: 'bg-stone-200 text-stone-800',
                 icon: '☕',
-                bgGradient: 'straw-gradient-coffee',
-                borderColor: 'border-amber-300',
-                price: 200,
-                desc: '업사이클링 커피 박(찌꺼기)으로 만든 고급 빨대. 은은하게 감도는 커피 향이 일품입니다.',
-                flavors: [
-                    { name: '은은한 커피향', badge: '풍미 ☕', color: 'bg-amber-100 text-amber-900' },
-                    { name: '시나몬맛', badge: '향긋 🌿', color: 'bg-amber-200 text-amber-800' }
-                ],
-                durability: '2시간 이상 유지',
-                texture: '단단한 곡물 비스킷 느낌'
+                imageColor: 'from-stone-200 to-stone-400',
+                description: '커피를 추출하고 남은 커피박을 업사이클링하여 만든 친환경 식물성 빨대입니다. 은은한 로스팅 향이 더해져 커피 본연의 풍미를 더욱 살려줍니다.',
+                nutritional: '원재료: 업사이클링 커피박, 식물성 곡물 전분 / 열량: 개당 10kcal'
+            },
+            {
+                id: 'apple',
+                name: '사과 펙틴 빨대 (Apple Pectin)',
+                category: 'fruity',
+                flavor: '상큼하고 청량한 풋사과맛',
+                texture: '유기농 구미 젤리 식감',
+                duration: '1.5 시간 유지',
+                pairing: '사과 주스, 청포도 에이드, 아이스티',
+                price: 4000,
+                priceUnit: '10개입 세트',
+                badgeBg: 'bg-emerald-100 text-emerald-800',
+                icon: '🍏',
+                imageColor: 'from-emerald-100 to-teal-100',
+                description: '사과에서 추출한 펙틴 성분으로 만들어 깔끔한 과일 주스류와 잘 어우러집니다. 과일의 청량함을 빨대 맛으로 한 번 더 감상할 수 있습니다.',
+                nutritional: '원재료: 사과 펙틴, 천연 사과 농축액 / 열량: 개당 18kcal'
+            },
+            {
+                id: 'caramel',
+                name: '카라멜 캔디 빨대 (Caramel Candy)',
+                category: 'sweet',
+                flavor: '부드럽고 풍부한 밀크 카라멜맛',
+                texture: '쫀득 달콤 캔디 식감',
+                duration: '1.5~2 시간 유지',
+                pairing: '버블 밀크티, 토피넛 라떼, 슈크림 프라푸치노',
+                price: 4300,
+                priceUnit: '10개입 세트',
+                badgeBg: 'bg-amber-100 text-amber-800',
+                icon: '🍬',
+                imageColor: 'from-amber-100 to-orange-100',
+                description: '달달한 밀크티나 달콤한 라떼류에 더할 나위 없는 조합! 카라멜 특유의 부드럽고 깊은 풍미가 음료의 매력을 극대화해 줍니다.',
+                nutritional: '원재료: 천연 카라멜 시럽, 우유 단백질 / 열량: 개당 25kcal'
             }
         ];
 
-        // Drink Pairing Data
-        const DRINK_PAIRINGS = [
-            {
-                id: 'iced_americano',
-                name: '아이스 아메리카노',
-                icon: '☕',
-                recommendedStraw: '쌀 빨대 (누룽지맛) 또는 커피박 빨대 (시나몬맛)',
-                reason: '씁쓸한 커피 고유의 맛과 구수한 누룽지향이 어우러져 고소한 풍미가 극대화됩니다.'
-            },
-            {
-                id: 'ade',
-                name: '상큼한 과일에이드',
-                icon: '🍹',
-                recommendedStraw: '젤리 빨대 (청포도맛 / 복숭아맛)',
-                reason: '탄산의 청량함과 젤리의 쫄깃함이 더해져 상큼함이 배가됩니다.'
-            },
-            {
-                id: 'milktea',
-                name: '밀크티 / 라떼',
-                icon: '🧋',
-                recommendedStraw: '사탕 빨대 (초코맛 / 바나나맛)',
-                reason: '부드러운 우유 풍미 속에 녹아드는 초콜릿의 달콤한 레이어링을 경험할 수 있습니다.'
-            },
-            {
-                id: 'smoothie',
-                name: '과일 스무디',
-                icon: '🥤',
-                recommendedStraw: '사탕 빨대 (딸기맛) 또는 쌀 빨대 (플레인)',
-                reason: '점도가 높은 스무디를 마실 때도 단단함을 유지하며 과일 맛을 끌어올려 줍니다.'
-            }
-        ];
-
-        // Simulator Data Matrix
-        const SIMULATION_DATA = {
-            rice: {
-                0: { text: "완전 단단함! 일반 빨대처럼 편하게 음료를 흡입할 수 있습니다.", state: "แข็ง / Solid", emoji: "🥖" },
-                15: { text: "약간 부드러워짐. 빨대 내부가 음료를 머금어 은은한 풍미가 우러나기 시작합니다.", state: "Slightly Soft", emoji: "🌾" },
-                30: { text: "음료를 다 마신 후! 바삭 고소하게 씹어먹기 딱 좋은 알맞은 질감이 됩니다.", state: "Ready to Eat!", emoji: "😋" },
-                60: { text: "물에 오래 담겨 촉촉해짐. 부담 없이 과자처럼 완전히 씹어서 섭취 가능합니다.", state: "Chewy Snack", emoji: "🍪" }
-            },
-            candy: {
-                0: { text: "매끈하고 단단함. 음료 흡입 시 빨대에서 달콤한 과일 향이 살짝 감돕니다.", state: "Sweet & Hard", emoji: "🍭" },
-                15: { text: "빨대 끝부분이 천천히 녹으며 음료에 달콤함을 한 스푼 더해줍니다.", state: "Melting Sweetness", emoji: "🍓" },
-                30: { text: "빨대가 슬림해짐! 남은 사탕 부위를 사탕처럼 쪽쪽 빨아먹는 재미가 있습니다.", state: "Candy Time", emoji: "🍬" },
-                60: { text: "녹아서 음료와 하나가 됨! 끝까지 달콤함을 선사합니다.", state: "Fully Melted", emoji: "✨" }
-            },
-            jelly: {
-                0: { text: "탱글탱글한 감촉. 단단하지만 탄력 있는 젤리 빨대의 독특한 흡입감!", state: "Jelly Elastic", emoji: "🍮" },
-                15: { text: "음료 온도에 촉촉해지며 씹고 싶어지는 탱글탱글함이 한층 강해집니다.", state: "Super Elastic", emoji: "🍇" },
-                30: { text: "음료 완샷 후, 빨대를 맛있게 오물오물 씹어먹을 타이밍!", state: "Chewy Time", emoji: "🤤" },
-                60: { text: "자연스럽게 분해되기 시작함. 100% 안심하고 먹을 수 있는 젤리 디저트.", state: "Soft Dessert", emoji: "젤리" }
-            },
-            coffee: {
-                0: { text: "아주 단단하고 견고함. 긴 시간 동안 마셔도 변형이 거의 없습니다.", state: "Ultra Durable", emoji: "☕" },
-                15: { text: "은은한 고소함과 시나몬/커피 향이 빨대 주변으로 감돌기 시작합니다.", state: "Aromatic", emoji: "☕" },
-                30: { text: "내구성이 단단하게 유지되어 음료 시원함을 유지하며 다 마실 수 있습니다.", state: "Still Firm", emoji: "✨" },
-                60: { text: "약간 말랑해진 상태. 비스킷을 씹듯 오독오독 씹어서 고소하게 마무리!", state: "Biscuit Crunch", emoji: "🍪" }
-            }
-        };
-
-        // State Management
-        let selectedCategory = 'all';
+        // State Store
         let cart = [];
+        let currentSimStage = 1;
 
-        // Initialization
+        // On Load Initializer
         window.onload = function() {
-            lucide.createIcons();
-            renderCategoryTabs();
-            renderStrawCards();
-            renderDrinkSelector();
-            updateSimulatorFeedback();
-
-            // Setup Simulator Listener
-            document.getElementById('sim-time-range').addEventListener('input', updateSimulatorFeedback);
-            document.getElementById('sim-straw-select').addEventListener('change', updateSimulatorFeedback);
+            renderStrawGrid(strawData);
+            setSimStage(1);
+            updateEcoCalc(3);
         };
 
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        function renderStrawGrid(items) {
+            const grid = document.getElementById('straw-grid');
+            grid.innerHTML = '';
 
-        // Render Category Filter Buttons
-        function renderCategoryTabs() {
-            const categories = [
-                { id: 'all', label: '전체 보기 ✨' },
-                { id: 'rice', label: '🌾 쌀 빨대' },
-                { id: 'candy', label: '🍬 사탕 빨대' },
-                { id: 'jelly', label: '🍇 젤리 빨대' },
-                { id: 'coffee', label: '☕ 커피박 빨대' }
-            ];
-
-            const container = document.getElementById('category-tabs');
-            container.innerHTML = categories.map(cat => `
-                <button onclick="filterCategory('${cat.id}')" 
-                        class="px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all ${
-                            selectedCategory === cat.id 
-                            ? 'bg-amber-500 text-white shadow-md shadow-amber-200' 
-                            : 'bg-slate-100 text-slate-600 hover:bg-amber-100 hover:text-amber-800'
-                        }">
-                    ${cat.label}
-                </button>
-            `).join('');
-        }
-
-        function filterCategory(catId) {
-            selectedCategory = catId;
-            renderCategoryTabs();
-            renderStrawCards();
-        }
-
-        // Render Straw Cards Grid
-        function renderStrawCards() {
-            const container = document.getElementById('straw-cards-container');
-            const filteredData = selectedCategory === 'all' 
-                ? STRAW_DATA 
-                : STRAW_DATA.filter(item => item.category === selectedCategory);
-
-            container.innerHTML = filteredData.map(straw => `
-                <div class="rounded-3xl p-5 border ${straw.borderColor} ${straw.bgGradient} flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md">
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl border border-slate-200 overflow-hidden custom-shadow card-hover flex flex-col justify-between";
+                card.innerHTML = `
                     <div>
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-3xl">${straw.icon}</span>
-                            <span class="text-xs font-black text-amber-900 bg-white/80 px-2.5 py-1 rounded-full shadow-xs">
-                                개당 ${straw.price}원
+                        <!-- Header Visual -->
+                        <div class="h-40 bg-gradient-to-br ${item.imageColor} relative flex items-center justify-center p-6">
+                            <span class="text-6xl drop-shadow-md select-none transform hover:scale-110 transition-transform cursor-pointer" onclick="openDetailModal('${item.id}')">${item.icon}</span>
+                            <span class="absolute top-4 right-4 ${item.badgeBg} text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                <i class="fa-solid fa-clock mr-1"></i>${item.duration}
                             </span>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-800 mb-1">${straw.name}</h3>
-                        <p class="text-xs text-slate-600 mb-4 leading-relaxed">${straw.desc}</p>
                         
-                        <!-- Flavor Selection Pills -->
-                        <div class="mb-4">
-                            <label class="block text-xs font-bold text-slate-700 mb-2">선택 가능한 맛:</label>
-                            <div class="flex flex-wrap gap-1.5" id="flavors-${straw.id}">
-                                ${straw.flavors.map((f, idx) => `
-                                    <button type="button" 
-                                            onclick="selectFlavor('${straw.id}', '${f.name}', this)"
-                                            class="flavor-btn-${straw.id} text-xs px-2.5 py-1 rounded-xl font-semibold border border-amber-200/60 bg-white/90 text-slate-700 hover:bg-amber-50 transition ${idx === 0 ? 'ring-2 ring-amber-500 bg-amber-50' : ''}">
-                                        ${f.name}
-                                    </button>
-                                `).join('')}
+                        <!-- Content -->
+                        <div class="p-6 space-y-4">
+                            <div>
+                                <h3 class="text-xl font-extrabold text-slate-800 hover:text-emerald-600 transition-colors cursor-pointer" onclick="openDetailModal('${item.id}')">${item.name}</h3>
+                                <p class="text-xs font-semibold text-emerald-600 mt-0.5"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>${item.flavor}</p>
                             </div>
-                        </div>
 
-                        <div class="bg-white/60 rounded-xl p-2.5 text-[11px] text-slate-600 space-y-1 mb-4 border border-white/80">
-                            <div class="flex justify-between">
-                                <span class="text-slate-400">유지시간:</span>
-                                <span class="font-bold">${straw.durability}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-400">식감:</span>
-                                <span class="font-bold">${straw.texture}</span>
+                            <div class="space-y-2 text-xs text-slate-600 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400 font-medium">식감 스타일:</span>
+                                    <span class="font-bold text-slate-700">${item.texture}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400 font-medium">추천 음료:</span>
+                                    <span class="font-bold text-slate-700 truncate max-w-[170px] text-right">${item.pairing}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <button onclick="addToCartFromCard('${straw.id}')" class="w-full py-2.5 bg-slate-900 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1">
-                        <i data-lucide="plus" class="w-4 h-4"></i> 장바구니 담기
+                    <!-- Footer & Actions -->
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-slate-100 gap-2">
+                        <div>
+                            <span class="text-lg font-black text-slate-900">${item.price.toLocaleString()}원</span>
+                            <span class="text-[10px] text-slate-400 block">${item.priceUnit}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="openDetailModal('${item.id}')" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all">
+                                상세보기
+                            </button>
+                            <button onclick="addToCart('${item.id}')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 flex items-center gap-1">
+                                <i class="fa-solid fa-plus"></i> 담기
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Menu
+        function filterMenu(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-emerald-600', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-600');
+            });
+            event.target.classList.add('active', 'bg-emerald-600', 'text-white');
+            event.target.classList.remove('bg-white', 'text-slate-600');
+
+            if (category === 'all') {
+                renderStrawGrid(strawData);
+            } else {
+                const filtered = strawData.filter(item => item.category === category);
+                renderStrawGrid(filtered);
+            }
+        }
+
+        function recommendStraw(drinkType) {
+            const resultBox = document.getElementById('pairing-result');
+            const iconEl = document.getElementById('result-icon');
+            const titleEl = document.getElementById('result-title');
+            const descEl = document.getElementById('result-desc');
+            const actionsEl = document.getElementById('result-actions');
+
+            let recommendation = {};
+
+            switch(drinkType) {
+                case 'americano':
+                    recommendation = {
+                        straw: strawData.find(s => s.id === 'rice'),
+                        why: '아이스 아메리카노의 쌉싸름한 맛과 고소한 쌀 빨대의 숭늉 풍미가 조화롭게 어우러지며, 오랜 시간 깔끔하고 단단함을 유지합니다!'
+                    };
+                    break;
+                case 'milk':
+                    recommendation = {
+                        straw: strawData.find(s => s.id === 'choco'),
+                        why: '따뜻하거나 미지근한 우유에 초코 사탕 빨대를 꽂으면 빨대에서 살포시 녹아나는 카카오 향으로 연한 초코 우유의 풍미까지 느낄 수 있습니다!'
+                    };
+                    break;
+                case 'smoothie':
+                    recommendation = {
+                        straw: strawData.find(s => s.id === 'strawberry'),
+                        why: '진한 딸기 스무디에 딸기 젤리 빨대를 더해 매력 UP! 음료를 다 마신 후 젤리처럼 쫀득하게 씹는 식감이 일품입니다.'
+                    };
+                    break;
+                case 'lemonade':
+                    recommendation = {
+                        straw: strawData.find(s => s.id === 'apple'),
+                        why: '상큼함과 상큼함의 극대화! 풋사과 펙틴 빨대가 에이드의 탄산감과 과즙 맛을 한층 더 청량하게 만들어줍니다.'
+                    };
+                    break;
+                case 'milktea':
+                    recommendation = {
+                        straw: strawData.find(s => s.id === 'caramel'),
+                        why: '버블 밀크티나 고급 라떼류에 카라멜 캔디 빨대의 달콤한 풍미가 얹어져 마치 디저트 카페에 온 듯한 풍부한 맛을 살려줍니다.'
+                    };
+                    break;
+            }
+
+            if (recommendation.straw) {
+                iconEl.innerText = recommendation.straw.icon;
+                titleEl.innerText = `${recommendation.straw.name}`;
+                descEl.innerText = recommendation.why;
+                actionsEl.innerHTML = `
+                    <button onclick="addToCart('${recommendation.straw.id}')" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-xs transition-all shadow-md">
+                        추천 빨대 장바구니 담기
+                    </button>
+                    <button onclick="openDetailModal('${recommendation.straw.id}')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl font-bold text-xs transition-all">
+                        맛 상세보기
+                    </button>
+                `;
+                resultBox.classList.remove('hidden');
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function setSimStage(stage) {
+            currentSimStage = stage;
+            document.querySelectorAll('.sim-tab').forEach((tab, index) => {
+                if (index + 1 === stage) {
+                    tab.classList.add('bg-white', 'text-emerald-700', 'shadow-sm');
+                    tab.classList.remove('text-slate-500');
+                } else {
+                    tab.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm');
+                    tab.classList.add('text-slate-500');
+                }
+            });
+
+            const simContent = document.getElementById('sim-content');
+            if (stage === 1) {
+                simContent.innerHTML = `
+                    <div class="w-full md:w-1/3 flex justify-center">
+                        <div class="w-32 h-32 rounded-3xl bg-emerald-100 flex items-center justify-center text-6xl shadow-inner">🥤</div>
+                    </div>
+                    <div class="w-full md:w-2/3 space-y-3 text-left">
+                        <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-md">100% 내구성 보장</span>
+                        <h4 class="text-2xl font-extrabold text-slate-800">음료를 깔끔하게 마시는 단계</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            천연 재료를 가공한 고밀도 구조로 일반 플라스틱 빨대처럼 음료가 막힘없이 시원하게 빨려 올라옵니다. 눅눅하게 붕괴되지 않고 약 1.5시간 ~ 3시간 동안 형태를 완벽히 유지합니다.
+                        </p>
+                    </div>
+                `;
+            } else if (stage === 2) {
+                simContent.innerHTML = `
+                    <div class="w-full md:w-1/3 flex justify-center">
+                        <div class="w-32 h-32 rounded-3xl bg-amber-100 flex items-center justify-center text-6xl shadow-inner">⏳</div>
+                    </div>
+                    <div class="w-full md:w-2/3 space-y-3 text-left">
+                        <span class="text-xs font-bold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-md">식감 변화 타이밍</span>
+                        <h4 class="text-2xl font-extrabold text-slate-800">음료 수분을 머금어 촉촉해진 단계</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            음료를 다 마신 시점, 빨대 표면이 수분을 흡수하여 먹기 딱 좋은 부드러운 상태로 변화합니다! 젤리형 빨대는 말랑하고 쫀득해지며, 쌀 빨대는 오독오독 씹히는 고소한 쌀과자 느낌이 됩니다.
+                        </p>
+                    </div>
+                `;
+            } else if (stage === 3) {
+                simContent.innerHTML = `
+                    <div class="w-full md:w-1/3 flex justify-center">
+                        <div class="w-32 h-32 rounded-3xl bg-pink-100 flex items-center justify-center text-6xl shadow-inner">😋</div>
+                    </div>
+                    <div class="w-full md:w-2/3 space-y-3 text-left">
+                        <span class="text-xs font-bold px-2.5 py-1 bg-pink-100 text-pink-800 rounded-md">맛있는 제로 웨이스트</span>
+                        <h4 class="text-2xl font-extrabold text-slate-800">디저트로 맛있게 씹어먹는 단계</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            쓰레기 배출 0%! 빨대 본연의 풍미(딸기, 초코, 카라멜, 쌀 등)를 한 번 더 입안 가득 즐기며 기분 좋게 섭취하세요. 100% 천연 식물성 재료로 속도 편안합니다.
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateEcoCalc(val) {
+            document.getElementById('straw-count-val').innerText = val;
+            const annualStraws = val * 365;
+            const annualCo2 = Math.round(annualStraws * 1.5); // 1.5g CO2 saved per straw
+            const treeEffect = (annualCo2 / 6600).toFixed(2); // Avg tree absorbs ~6.6kg CO2/year
+
+            document.getElementById('calc-straws').innerText = annualStraws.toLocaleString() + '개';
+            document.getElementById('calc-co2').innerText = annualCo2.toLocaleString() + ' g';
+            document.getElementById('calc-trees').innerText = '약 ' + treeEffect + ' 그루';
+        }
+
+        function openDetailModal(id) {
+            const item = strawData.find(s => s.id === id);
+            if (!item) return;
+
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div class="text-center">
+                    <div class="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br ${item.imageColor} flex items-center justify-center text-5xl mb-4 shadow-md">
+                        ${item.icon}
+                    </div>
+                    <span class="text-xs font-bold ${item.badgeBg} px-3 py-1 rounded-full uppercase">${item.category}</span>
+                    <h3 class="text-2xl font-black text-slate-800 mt-2">${item.name}</h3>
+                    <p class="text-sm font-semibold text-emerald-600 mt-1">${item.flavor}</p>
+                </div>
+
+                <div class="space-y-3 text-sm text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <p class="text-slate-700 leading-relaxed">${item.description}</p>
+                    <hr class="border-slate-200">
+                    <div class="flex justify-between">
+                        <span class="font-bold text-slate-500">지속 가능 시간:</span>
+                        <span class="font-bold text-slate-800">${item.duration}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-bold text-slate-500">원재료 및 영양:</span>
+                        <span class="font-semibold text-slate-700 text-xs text-right max-w-[220px]">${item.nutritional}</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2">
+                    <div>
+                        <span class="text-2xl font-black text-slate-900">${item.price.toLocaleString()}원</span>
+                        <span class="text-xs text-slate-400 block">${item.priceUnit}</span>
+                    </div>
+                    <button onclick="addToCart('${item.id}'); closeDetailModal();" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-cart-plus"></i> 장바구니에 담기
                     </button>
                 </div>
-            `).join('');
-
-            lucide.createIcons();
-        }
-
-        // Active flavor tracking per card
-        const selectedFlavors = {
-            rice: '누룽지맛',
-            candy: '딸기맛',
-            jelly: '포도맛',
-            coffee: '은은한 커피향'
-        };
-
-        function selectFlavor(strawId, flavorName, btnEl) {
-            selectedFlavors[strawId] = flavorName;
-            const buttons = document.querySelectorAll(`.flavor-btn-${strawId}`);
-            buttons.forEach(b => {
-                b.classList.remove('ring-2', 'ring-amber-500', 'bg-amber-50');
-            });
-            btnEl.classList.add('ring-2', 'ring-amber-500', 'bg-amber-50');
-        }
-
-        // Render Drink Recommendation Selector
-        function renderDrinkSelector() {
-            const container = document.getElementById('drink-selector');
-            container.innerHTML = DRINK_PAIRINGS.map(drink => `
-                <button onclick="showRecommendation('${drink.id}')" class="drink-btn p-4 bg-slate-50 hover:bg-amber-100/50 border border-slate-200 hover:border-amber-300 rounded-2xl transition flex flex-col items-center text-center group">
-                    <span class="text-3xl mb-2 group-hover:scale-110 transitiontransform">${drink.icon}</span>
-                    <span class="text-xs font-bold text-slate-800">${drink.name}</span>
-                </button>
-            `).join('');
-        }
-
-        function showRecommendation(drinkId) {
-            const drink = DRINK_PAIRINGS.find(d => d.id === drinkId);
-            const resultBox = document.getElementById('recommendation-result');
-            
-            resultBox.classList.remove('hidden');
-            resultBox.innerHTML = `
-                <div class="flex items-start gap-4">
-                    <div class="text-4xl bg-amber-100 p-3 rounded-2xl">${drink.icon}</div>
-                    <div class="space-y-1">
-                        <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">추천 꿀조합</span>
-                        <h4 class="text-base font-bold text-slate-800">${drink.name} + <span class="text-amber-600">${drink.recommendedStraw}</span></h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">${drink.reason}</p>
-                    </div>
-                </div>
             `;
+            document.getElementById('detail-modal').classList.remove('hidden');
         }
 
-        // Update Simulator Output
-        function updateSimulatorFeedback() {
-            const strawType = document.getElementById('sim-straw-select').value;
-            const minutes = parseInt(document.getElementById('sim-time-range').value);
-            const timeText = document.getElementById('sim-time-text');
-            const feedbackContainer = document.getElementById('sim-feedback-content');
-
-            // Find nearest time key
-            let key = 0;
-            if (minutes >= 60) key = 60;
-            else if (minutes >= 30) key = 30;
-            else if (minutes >= 15) key = 15;
-            else key = 0;
-
-            const simInfo = SIMULATION_DATA[strawType][key];
-
-            timeText.innerText = `${minutes}분 경과 (${key === 0 ? '막 음료에 넣음' : key + '분 시점 질감'})`;
-
-            feedbackContainer.innerHTML = `
-                <div class="text-5xl animate-bounce">${simInfo.emoji}</div>
-                <div class="inline-block bg-amber-100 text-amber-800 font-extrabold text-xs px-3 py-1 rounded-full">
-                    상태: ${simInfo.state}
-                </div>
-                <p class="text-sm font-semibold text-slate-700 max-w-md mx-auto">
-                    "${simInfo.text}"
-                </p>
-            `;
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
         }
 
-        // Cart Logic
-        function addToCartFromCard(strawId) {
-            const straw = STRAW_DATA.find(s => s.id === strawId);
-            const flavor = selectedFlavors[strawId] || straw.flavors[0].name;
+        function addToCart(id) {
+            const item = strawData.find(s => s.id === id);
+            const existing = cart.find(c => c.id === id);
 
-            const existingIndex = cart.findIndex(item => item.id === strawId && item.flavor === flavor);
-
-            if (existingIndex > -1) {
-                cart[existingIndex].quantity += 1;
+            if (existing) {
+                existing.qty += 1;
             } else {
-                cart.push({
-                    id: strawId,
-                    name: straw.name,
-                    flavor: flavor,
-                    price: straw.price,
-                    quantity: 1
-                });
+                cart.push({ ...item, qty: 1 });
             }
 
-            updateCartUI();
-            showToast(`'${straw.name} (${flavor})'가 장바구니에 담겼습니다!`);
+            updateCartBadge();
+            showToast(`'${item.name}'이(가) 장바구니에 추가되었습니다!`);
         }
 
-        function updateCartUI() {
+        function updateCartBadge() {
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
             const badge = document.getElementById('cart-badge');
-            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            badge.innerText = totalCount;
-
-            const itemsContainer = document.getElementById('cart-items-container');
-            const totalPriceEl = document.getElementById('cart-total-price');
-            const ecoPlasticSaved = document.getElementById('eco-plastic-saved');
-
-            if (cart.length === 0) {
-                itemsContainer.innerHTML = `
-                    <div class="text-center py-8 text-slate-400 text-xs">
-                        장바구니가 비어 있습니다. 빨대를 추가해 보세요!
-                    </div>
-                `;
-                totalPriceEl.innerText = '0원';
-                ecoPlasticSaved.innerText = '0';
-                return;
+            if (totalQty > 0) {
+                badge.innerText = totalQty;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
             }
-
-            let totalPrice = 0;
-            itemsContainer.innerHTML = cart.map((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                totalPrice += itemTotal;
-                return `
-                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-800">${item.name}</h4>
-                            <span class="text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
-                                ${item.flavor}
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="flex items-center border border-slate-200 rounded-lg bg-white">
-                                <button onclick="changeQuantity(${index}, -1)" class="px-2 py-0.5 text-slate-500 hover:text-slate-800 font-bold text-xs">-</button>
-                                <span class="px-2 text-xs font-bold text-slate-700">${item.quantity}</span>
-                                <button onclick="changeQuantity(${index}, 1)" class="px-2 py-0.5 text-slate-500 hover:text-slate-800 font-bold text-xs">+</button>
-                            </div>
-                            <span class="text-xs font-bold text-slate-800 w-14 text-right">${itemTotal.toLocaleString()}원</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            totalPriceEl.innerText = `${totalPrice.toLocaleString()}원`;
-            // Calculate plastic saved (approx 1.5g per straw)
-            const plasticSavedGrams = (totalCount * 1.5).toFixed(1);
-            ecoPlasticSaved.innerText = plasticSavedGrams;
-        }
-
-        function changeQuantity(index, delta) {
-            cart[index].quantity += delta;
-            if (cart[index].quantity <= 0) {
-                cart.splice(index, 1);
-            }
-            updateCartUI();
         }
 
         function openCartModal() {
-            updateCartUI();
+            renderCartItems();
             document.getElementById('cart-modal').classList.remove('hidden');
         }
 
@@ -683,27 +729,87 @@
             document.getElementById('cart-modal').classList.add('hidden');
         }
 
-        function checkout() {
-            if (cart.length === 0) {
-                showToast('장바구니가 비어 있습니다.');
-                return;
+        function updateQty(id, change) {
+            const index = cart.findIndex(c => c.id === id);
+            if (index !== -1) {
+                cart[index].qty += change;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
             }
-            showToast('🎉 주문이 완료되었습니다! (시뮬레이션)');
-            cart = [];
-            updateCartUI();
-            closeCartModal();
+            updateCartBadge();
+            renderCartItems();
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            const msgEl = document.getElementById('toast-message');
-            msgEl.innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalPriceEl = document.getElementById('cart-total-price');
 
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p class="text-center text-slate-400 py-8 text-sm">장바구니가 비어 있습니다.<br/>원하는 빨대를 추가해보세요!</p>`;
+                cartTotalPriceEl.innerText = '0원';
+                return;
+            }
+
+            let total = 0;
+            cartItemsContainer.innerHTML = '';
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100";
+                row.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${item.icon}</span>
+                        <div>
+                            <h5 class="font-bold text-sm text-slate-800">${item.name}</h5>
+                            <span class="text-xs text-slate-400">${item.price.toLocaleString()}원</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center bg-white rounded-lg border border-slate-200">
+                            <button onclick="updateQty('${item.id}', -1)" class="px-2 py-0.5 text-slate-600 hover:bg-slate-100 rounded-l-lg">-</button>
+                            <span class="px-2 text-xs font-bold text-slate-800">${item.qty}</span>
+                            <button onclick="updateQty('${item.id}', 1)" class="px-2 py-0.5 text-slate-600 hover:bg-slate-100 rounded-r-lg">+</button>
+                        </div>
+                        <span class="text-sm font-extrabold text-slate-800 w-16 text-right">${itemTotal.toLocaleString()}원</span>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(row);
+            });
+
+            cartTotalPriceEl.innerText = `${total.toLocaleString()}원`;
+        }
+
+        function simulateOrder() {
+            if (cart.length === 0) {
+                showToast('장바구니에 빨대를 먼저 담아주세요!', 'error');
+                return;
+            }
+            closeCartModal();
+            showToast('🌱 샘플 주문 신청이 성공적으로 완료되었습니다!', 'success');
+            cart = [];
+            updateCartBadge();
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = msg;
+            if (type === 'error') {
+                toastIcon.className = "fa-solid fa-circle-exclamation text-amber-400 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            
             setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
             }, 2500);
         }
     </script>
