@@ -3,316 +3,709 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 저녁 뭐 먹지? | 저녁 메뉴 추천</title>
+    <title>YumStraw - 먹을 수 있는 빨대 샤핑 & 탐색기</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- FontAwesome for fallback styling -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
         body {
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
-            padding-bottom: 50px;
+            font-family: 'Pretendard', sans-serif;
+            background-color: #fdfbf7;
         }
-
-        header {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-            color: white;
-            text-align: center;
-            padding: 2.5rem 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        .straw-bubble {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
+        .straw-gradient-rice { background: linear-gradient(135deg, #FFF9E6 0%, #F5E6CA 100%); }
+        .straw-gradient-candy { background: linear-gradient(135deg, #FFE3E3 0%, #FFB1B1 100%); }
+        .straw-gradient-jelly { background: linear-gradient(135deg, #E6F9E6 0%, #A2E8A2 100%); }
+        .straw-gradient-coffee { background: linear-gradient(135deg, #EFE3D3 0%, #D3B89E 100%); }
 
-        header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
-
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
         }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .card h2 {
-            font-size: 1.5rem;
-            color: #ff6b6b;
-            margin-bottom: 1rem;
-        }
-
-        /* 버튼 스타일 */
-        .btn {
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 0.8rem 1.8rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
-        }
-
-        .btn:hover {
-            background-color: #ee5253;
-            transform: translateY(-2px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        /* 카테고리 필터 */
-        .category-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-
-        .category-btn {
-            background: #edf2f7;
-            border: 1px solid #cbd5e0;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: 0.2s;
-        }
-
-        .category-btn.active {
-            background: #ff6b6b;
-            color: white;
-            border-color: #ff6b6b;
-        }
-
-        /* 디스플레이 영역 */
-        .result-box {
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 1.5rem 0;
-            padding: 1.5rem;
-            background: #fff5f5;
-            border-radius: 12px;
-            border: 2px dashed #ff8e53;
-        }
-
-        .result-title {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2d3748;
-        }
-
-        .result-category {
-            font-size: 0.9rem;
-            color: #e53e3e;
-            background: #fed7d7;
-            padding: 0.2rem 0.6rem;
-            border-radius: 10px;
-            margin-bottom: 0.5rem;
-        }
-
-        /* 리스트 스타일 */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 1rem;
-        }
-
-        .menu-item {
-            background: #f7fafc;
-            border: 1px solid #e2e8f0;
-            padding: 0.8rem;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            text-align: center;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
     </style>
 </head>
-<body>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-    <header>
-        <h1>오늘 저녁 뭐 먹지? 🍽️</h1>
-        <p>결정 장애를 해결해주는 저녁 메뉴 추천기</p>
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-amber-100/80 transition-all">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="scrollToTop()">
+                <div class="w-10 h-10 rounded-full bg-amber-400 flex items-center justify-center text-white text-xl font-black shadow-inner">
+                    🥤
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">YumStraw</span>
+                    <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full ml-1 font-semibold">맛있는 빨대</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex space-x-8 font-medium text-sm text-slate-600">
+                <a href="#menu" class="hover:text-amber-600 transition">빨대 메뉴 & 맛</a>
+                <a href="#recommender" class="hover:text-amber-600 transition">음료 궁합 추천</a>
+                <a href="#simulator" class="hover:text-amber-600 transition">맛 시뮬레이터</a>
+            </nav>
+
+            <button onclick="openCartModal()" class="relative p-2.5 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-700 transition flex items-center gap-2">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                <span class="hidden sm:inline font-bold text-sm">장바구니</span>
+                <span id="cart-badge" class="bg-amber-500 text-white text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+            </button>
+        </div>
     </header>
 
-    <div class="container">
-        <!-- 랜덤 추천 카드 -->
-        <div class="card">
-            <h2>🎲 랜덤 메뉴 추천</h2>
-            
-            <div class="category-group" id="categoryGroup">
-                <button class="category-btn active" onclick="setCategory('전체')">전체</button>
-                <button class="category-btn" onclick="setCategory('한식')">한식</button>
-                <button class="category-btn" onclick="setCategory('일식')">일식</button>
-                <button class="category-btn" onclick="setCategory('중식')">중식</button>
-                <button class="category-btn" onclick="setCategory('양식')">양식</button>
-                <button class="category-btn" onclick="setCategory('분식/기타')">분식/기타</button>
-            </div>
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-amber-50/60 to-transparent py-12 md:py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 bg-amber-100/80 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-full text-xs font-bold">
+                        <span class="animate-pulse">🌱</span> 100% 분해 & 씹어먹는 친환경 빨대
+                    </div>
+                    <h1 class="text-3xl sm:text-5xl font-black text-slate-900 leading-tight">
+                        음료를 다 마신 후,<br>
+                        <span class="bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 bg-clip-text text-transparent">맛있게 씹어먹는 빨대!</span>
+                    </h1>
+                    <p class="text-base sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0">
+                        지구를 지키는 가장 달콤하고 고소한 방법! 쌀, 사탕, 젤리, 커피박으로 만든 
+                        다양한 재료와 매력적인 맛의 빨대를 만나보세요.
+                    </p>
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#menu" class="px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-lg shadow-amber-200 transition transform hover:-translate-y-0.5">
+                            메뉴 탐색하기 🍹
+                        </a>
+                        <a href="#simulator" class="px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold rounded-2xl shadow-sm transition">
+                            시간별 맛 체험하기 ⏱️
+                        </a>
+                    </div>
+                </div>
 
-            <div class="result-box">
-                <span class="result-category" id="resultCategory" style="display: none;">한식</span>
-                <div class="result-title" id="resultTitle">버튼을 눌러주세요!</div>
+                <!-- Hero Graphic Card Showcase -->
+                <div class="relative flex justify-center">
+                    <div class="w-full max-w-md bg-white p-6 rounded-3xl border border-amber-100 shadow-xl relative overflow-hidden">
+                        <div class="absolute -right-8 -top-8 w-32 h-32 bg-amber-100 rounded-full blur-2xl opacity-60"></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-extrabold tracking-wider uppercase text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg">Popular Choice</span>
+                            <span class="text-xs text-slate-400">친환경 소재 100%</span>
+                        </div>
+                        <div class="text-center py-6 bg-amber-50/50 rounded-2xl mb-4 border border-dashed border-amber-200">
+                            <div class="text-6xl mb-2 animate-bounce">🌾</div>
+                            <h3 class="text-xl font-bold text-slate-800">바삭고소 쌀 빨대</h3>
+                            <p class="text-xs text-amber-700 mt-1">누룽지 / 고소한 맛 / 플레인</p>
+                        </div>
+                        <div class="space-y-2 text-xs text-slate-600">
+                            <div class="flex justify-between py-1 border-b border-slate-100">
+                                <span>음료 보존 시간</span>
+                                <span class="font-bold text-slate-800">최대 2~3시간</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-100">
+                                <span>식감 / 재질</span>
+                                <span class="font-bold text-slate-800">바삭바삭한 누룽지 식감</span>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span>플라스틱 절감 효과</span>
+                                <span class="font-bold text-emerald-600">개당 -1.5g CO2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <button class="btn" onclick="pickRandomMenu()">메뉴 뽑기!</button>
         </div>
+    </section>
 
-        <!-- 메뉴 목록 카드 -->
-        <div class="card">
-            <h2>📋 추천 메뉴 목록</h2>
-            <div class="menu-grid" id="menuList">
-                <!-- 자바스크립트로 메뉴 목록이 들어갑니다 -->
+    <!-- Straw Menu Section -->
+    <section id="menu" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">먹는 빨대 메뉴 & 맛 가이드</h2>
+                <p class="text-slate-500 mt-2 text-sm sm:text-base">원하는 재료 타입을 선택하고 취향에 딱 맞는 맛을 골라보세요!</p>
+            </div>
+
+            <!-- Material Category Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10" id="category-tabs">
+                <!-- Dynamic Tabs injected via JS -->
+            </div>
+
+            <!-- Straw Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="straw-cards-container">
+                <!-- Cards injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommendation Section -->
+    <section id="recommender" class="py-16 bg-gradient-to-br from-orange-50 via-amber-50/30 to-amber-100/40">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-amber-100">
+                <div class="text-center mb-8">
+                    <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Smart Pairing</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">내가 마실 음료와 어울리는 빨대는?</h2>
+                    <p class="text-slate-500 text-sm mt-1">음료 종류를 선택하시면 가장 맛있는 빨대 궁합을 추천해 드립니다.</p>
+                </div>
+
+                <!-- Drink Selection Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8" id="drink-selector">
+                    <!-- Drink Buttons Injected by JS -->
+                </div>
+
+                <!-- Recommendation Result Box -->
+                <div id="recommendation-result" class="hidden bg-slate-50 rounded-2xl p-6 border border-slate-200 transition-all">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Eating Straw Experience Simulator -->
+    <section id="simulator" class="py-16 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Interactive Simulator</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">시간에 따른 빨대의 맛과 식감 체험</h2>
+                <p class="text-slate-500 text-sm mt-1">음료를 마시는 시간에 따라 빨대의 식감과 맛이 어떻게 변화하는지 확인해보세요.</p>
+            </div>
+
+            <div class="bg-amber-50/60 rounded-3xl p-6 sm:p-8 border border-amber-100">
+                <!-- Select Straw for Simulation -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-white p-4 rounded-2xl border border-amber-100 shadow-sm">
+                    <label class="font-bold text-slate-700 text-sm sm:text-base">체험할 빨대 종류 선택:</label>
+                    <select id="sim-straw-select" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        <option value="rice">🌾 쌀 빨대 (누룽지맛)</option>
+                        <option value="candy">🍬 사탕 빨대 (딸기맛)</option>
+                        <option value="jelly">🍇 젤리 빨대 (포도맛)</option>
+                        <option value="coffee">☕ 커피박 빨대 (은은한 커피향)</option>
+                    </select>
+                </div>
+
+                <!-- Slider Control -->
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center font-bold">
+                        <span class="text-slate-600 text-sm">경과 시간:</span>
+                        <span id="sim-time-text" class="text-amber-600 text-lg font-black bg-white px-3 py-1 rounded-lg border border-amber-200">0분 (막 마시기 시작함)</span>
+                    </div>
+
+                    <input type="range" id="sim-time-range" min="0" max="60" value="0" step="15" 
+                           class="w-full h-3 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+
+                    <div class="flex justify-between text-xs text-slate-400 font-medium px-1">
+                        <span>0분 (직후)</span>
+                        <span>15분 (음료 중간)</span>
+                        <span>30분 (음료 완료)</span>
+                        <span>60분 (후식 타임)</span>
+                    </div>
+
+                    <!-- Visual Feedback Box -->
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm transition-all duration-300 min-h-[160px] flex flex-col justify-center">
+                        <div id="sim-feedback-content" class="text-center space-y-3">
+                            <!-- Feedback injected dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart & Order Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl transform transition-all relative max-h-[90vh] flex flex-col justify-between">
+            <button onclick="closeCartModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="shopping-cart" class="text-amber-500 w-6 h-6"></i>
+                    <h3 class="text-xl font-bold text-slate-900">내 빨대 장바구니</h3>
+                </div>
+
+                <!-- Items List -->
+                <div id="cart-items-container" class="space-y-3 max-h-56 overflow-y-auto my-4 pr-1">
+                    <!-- Items injected by JS -->
+                </div>
+
+                <!-- Environmental Impact Banner -->
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 my-4">
+                    <div class="flex items-center gap-2 text-emerald-800 font-bold text-sm mb-1">
+                        🌱 environmental impact (친환경 미소 지수)
+                    </div>
+                    <p class="text-xs text-emerald-700">
+                        이번 선택으로 플라스틱 쓰레기 <span id="eco-plastic-saved" class="font-bold text-emerald-900">0</span>g 절감 & 
+                        해양 생물 보호 효과를 얻었습니다!
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4 space-y-3">
+                <div class="flex justify-between text-base font-bold text-slate-800">
+                    <span>총 합계 금액:</span>
+                    <span id="cart-total-price" class="text-amber-600 font-black text-xl">0원</span>
+                </div>
+                <button onclick="checkout()" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-md transition text-center">
+                    주문 신청하기 (시뮬레이션)
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-xl shadow-xl transition-all duration-300 transform translate-y-20 opacity-0 z-50 flex items-center gap-2">
+        <i data-lucide="check-circle" class="text-emerald-400 w-5 h-5"></i>
+        <span id="toast-message">알림 메시지</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 mt-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs space-y-3">
+            <p class="font-semibold text-slate-300">🥤 YumStraw - 친환경 먹는 빨대 체험 플랫폼</p>
+            <p>본 웹사이트는 먹을 수 있는 빨대 메뉴 및 맛 정보를 안내하는 데모 프로그램입니다.</p>
+            <p class="text-slate-600">© 2026 YumStraw Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Application Logic (JavaScript) -->
     <script>
-        const menuData = [
-            // 한식
-            { name: "김치찌개", category: "한식" },
-            { name: "된장찌개", category: "한식" },
-            { name: "제육볶음", category: "한식" },
-            { name: "삼겹살", category: "한식" },
-            { name: "비빔밥", category: "한식" },
-            { name: "닭볶음탕", category: "한식" },
-            { name: "국밥", category: "한식" },
-            
-            // 일식
-            { name: "초밥", category: "일식" },
-            { name: "돈가스", category: "일식" },
-            { name: "라멘", category: "일식" },
-            { name: "우동", category: "일식" },
-            { name: "규동", category: "일식" },
-            
-            // 중식
-            { name: "짜장면", category: "중식" },
-            { name: "짬뽕", category: "중식" },
-            { name: "탕수육", category: "중식" },
-            { name: "마라탕", category: "중식" },
-            { name: "볶음밥", category: "중식" },
-
-            // 양식
-            { name: "파스타", category: "양식" },
-            { name: "피자", category: "양식" },
-            { name: "스테이크", category: "양식" },
-            { name: "햄버거", category: "양식" },
-
-            // 분식/기타
-            { name: "떡볶이", category: "분식/기타" },
-            { name: "족발/보쌈", category: "분식/기타" },
-            { name: "치킨", category: "분식/기타" },
-            { name: "월남쌈", category: "분식/기타" }
+        // Data Structure for Edible Straws
+        const STRAW_DATA = [
+            {
+                id: 'rice',
+                name: '쌀 빨대 (Rice Straw)',
+                category: 'rice',
+                categoryLabel: '🌾 쌀 / 곡물',
+                icon: '🌾',
+                bgGradient: 'straw-gradient-rice',
+                borderColor: 'border-amber-200',
+                price: 150,
+                desc: '100% 쌀과 타피오카로 제조. 음료에 담가둬도 불지 않으며 마신 후 고소하게 씹어먹습니다.',
+                flavors: [
+                    { name: '누룽지맛', badge: '인기 🔥', color: 'bg-amber-100 text-amber-800' },
+                    { name: '고소한 쌀맛', badge: '기본 ✨', color: 'bg-stone-100 text-stone-800' },
+                    { name: '플레인', badge: '깔끔 👍', color: 'bg-slate-100 text-slate-800' }
+                ],
+                durability: '2~3시간 유지',
+                texture: '바삭바삭 & 누룽지 식감'
+            },
+            {
+                id: 'candy',
+                name: '사탕 빨대 (Candy Straw)',
+                category: 'candy',
+                categoryLabel: '🍬 사탕수수 / 캔디',
+                icon: '🍬',
+                bgGradient: 'straw-gradient-candy',
+                borderColor: 'border-pink-200',
+                price: 300,
+                desc: '천연 과일향과 사탕수수로 만든 달콤한 빨대. 음료에 은은한 달콤함을 더해줍니다.',
+                flavors: [
+                    { name: '딸기맛', badge: '달콤 🍓', color: 'bg-pink-100 text-pink-800' },
+                    { name: '초코맛', badge: '진한 🍫', color: 'bg-orange-100 text-orange-900' },
+                    { name: '바나나맛', badge: '부드러운 🍌', color: 'bg-yellow-100 text-yellow-800' },
+                    { name: '사과맛', badge: '상큼 🍏', color: 'bg-green-100 text-green-800' }
+                ],
+                durability: '1~1.5시간 유지',
+                texture: '단단하고 달콤한 사탕 식감'
+            },
+            {
+                id: 'jelly',
+                name: '젤리 빨대 (Jelly Straw)',
+                category: 'jelly',
+                categoryLabel: '🍇 젤리 / 우뭇가사리',
+                icon: '🍇',
+                bgGradient: 'straw-gradient-jelly',
+                borderColor: 'border-emerald-200',
+                price: 250,
+                desc: '해조류 우뭇가사리와 과즙으로 만든 탱글탱글한 빨대. 음료 마시는 재미를 선사합니다.',
+                flavors: [
+                    { name: '포도맛', badge: '새콤 🍇', color: 'bg-purple-100 text-purple-800' },
+                    { name: '복숭아맛', badge: '베스트 🍑', color: 'bg-rose-100 text-rose-800' },
+                    { name: '청포도맛', badge: '청량 🟢', color: 'bg-emerald-100 text-emerald-800' }
+                ],
+                durability: '45분~1시간 유지',
+                texture: '쫄깃하고 쫀득한 젤리 식감'
+            },
+            {
+                id: 'coffee',
+                name: '커피박 빨대 (Coffee Straw)',
+                category: 'coffee',
+                categoryLabel: '☕ 커피박 / 곡물',
+                icon: '☕',
+                bgGradient: 'straw-gradient-coffee',
+                borderColor: 'border-amber-300',
+                price: 200,
+                desc: '업사이클링 커피 박(찌꺼기)으로 만든 고급 빨대. 은은하게 감도는 커피 향이 일품입니다.',
+                flavors: [
+                    { name: '은은한 커피향', badge: '풍미 ☕', color: 'bg-amber-100 text-amber-900' },
+                    { name: '시나몬맛', badge: '향긋 🌿', color: 'bg-amber-200 text-amber-800' }
+                ],
+                durability: '2시간 이상 유지',
+                texture: '단단한 곡물 비스킷 느낌'
+            }
         ];
 
-        let selectedCategory = "전체";
-        let isSpinning = false;
+        // Drink Pairing Data
+        const DRINK_PAIRINGS = [
+            {
+                id: 'iced_americano',
+                name: '아이스 아메리카노',
+                icon: '☕',
+                recommendedStraw: '쌀 빨대 (누룽지맛) 또는 커피박 빨대 (시나몬맛)',
+                reason: '씁쓸한 커피 고유의 맛과 구수한 누룽지향이 어우러져 고소한 풍미가 극대화됩니다.'
+            },
+            {
+                id: 'ade',
+                name: '상큼한 과일에이드',
+                icon: '🍹',
+                recommendedStraw: '젤리 빨대 (청포도맛 / 복숭아맛)',
+                reason: '탄산의 청량함과 젤리의 쫄깃함이 더해져 상큼함이 배가됩니다.'
+            },
+            {
+                id: 'milktea',
+                name: '밀크티 / 라떼',
+                icon: '🧋',
+                recommendedStraw: '사탕 빨대 (초코맛 / 바나나맛)',
+                reason: '부드러운 우유 풍미 속에 녹아드는 초콜릿의 달콤한 레이어링을 경험할 수 있습니다.'
+            },
+            {
+                id: 'smoothie',
+                name: '과일 스무디',
+                icon: '🥤',
+                recommendedStraw: '사탕 빨대 (딸기맛) 또는 쌀 빨대 (플레인)',
+                reason: '점도가 높은 스무디를 마실 때도 단단함을 유지하며 과일 맛을 끌어올려 줍니다.'
+            }
+        ];
 
-        // 카테고리 변경 함수
-        function setCategory(category) {
-            selectedCategory = category;
-            
-            // 버튼 스타일 변경
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => {
-                if (btn.innerText === category) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
+        // Simulator Data Matrix
+        const SIMULATION_DATA = {
+            rice: {
+                0: { text: "완전 단단함! 일반 빨대처럼 편하게 음료를 흡입할 수 있습니다.", state: "แข็ง / Solid", emoji: "🥖" },
+                15: { text: "약간 부드러워짐. 빨대 내부가 음료를 머금어 은은한 풍미가 우러나기 시작합니다.", state: "Slightly Soft", emoji: "🌾" },
+                30: { text: "음료를 다 마신 후! 바삭 고소하게 씹어먹기 딱 좋은 알맞은 질감이 됩니다.", state: "Ready to Eat!", emoji: "😋" },
+                60: { text: "물에 오래 담겨 촉촉해짐. 부담 없이 과자처럼 완전히 씹어서 섭취 가능합니다.", state: "Chewy Snack", emoji: "🍪" }
+            },
+            candy: {
+                0: { text: "매끈하고 단단함. 음료 흡입 시 빨대에서 달콤한 과일 향이 살짝 감돕니다.", state: "Sweet & Hard", emoji: "🍭" },
+                15: { text: "빨대 끝부분이 천천히 녹으며 음료에 달콤함을 한 스푼 더해줍니다.", state: "Melting Sweetness", emoji: "🍓" },
+                30: { text: "빨대가 슬림해짐! 남은 사탕 부위를 사탕처럼 쪽쪽 빨아먹는 재미가 있습니다.", state: "Candy Time", emoji: "🍬" },
+                60: { text: "녹아서 음료와 하나가 됨! 끝까지 달콤함을 선사합니다.", state: "Fully Melted", emoji: "✨" }
+            },
+            jelly: {
+                0: { text: "탱글탱글한 감촉. 단단하지만 탄력 있는 젤리 빨대의 독특한 흡입감!", state: "Jelly Elastic", emoji: "🍮" },
+                15: { text: "음료 온도에 촉촉해지며 씹고 싶어지는 탱글탱글함이 한층 강해집니다.", state: "Super Elastic", emoji: "🍇" },
+                30: { text: "음료 완샷 후, 빨대를 맛있게 오물오물 씹어먹을 타이밍!", state: "Chewy Time", emoji: "🤤" },
+                60: { text: "자연스럽게 분해되기 시작함. 100% 안심하고 먹을 수 있는 젤리 디저트.", state: "Soft Dessert", emoji: "젤리" }
+            },
+            coffee: {
+                0: { text: "아주 단단하고 견고함. 긴 시간 동안 마셔도 변형이 거의 없습니다.", state: "Ultra Durable", emoji: "☕" },
+                15: { text: "은은한 고소함과 시나몬/커피 향이 빨대 주변으로 감돌기 시작합니다.", state: "Aromatic", emoji: "☕" },
+                30: { text: "내구성이 단단하게 유지되어 음료 시원함을 유지하며 다 마실 수 있습니다.", state: "Still Firm", emoji: "✨" },
+                60: { text: "약간 말랑해진 상태. 비스킷을 씹듯 오독오독 씹어서 고소하게 마무리!", state: "Biscuit Crunch", emoji: "🍪" }
+            }
+        };
+
+        // State Management
+        let selectedCategory = 'all';
+        let cart = [];
+
+        // Initialization
+        window.onload = function() {
+            lucide.createIcons();
+            renderCategoryTabs();
+            renderStrawCards();
+            renderDrinkSelector();
+            updateSimulatorFeedback();
+
+            // Setup Simulator Listener
+            document.getElementById('sim-time-range').addEventListener('input', updateSimulatorFeedback);
+            document.getElementById('sim-straw-select').addEventListener('change', updateSimulatorFeedback);
+        };
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render Category Filter Buttons
+        function renderCategoryTabs() {
+            const categories = [
+                { id: 'all', label: '전체 보기 ✨' },
+                { id: 'rice', label: '🌾 쌀 빨대' },
+                { id: 'candy', label: '🍬 사탕 빨대' },
+                { id: 'jelly', label: '🍇 젤리 빨대' },
+                { id: 'coffee', label: '☕ 커피박 빨대' }
+            ];
+
+            const container = document.getElementById('category-tabs');
+            container.innerHTML = categories.map(cat => `
+                <button onclick="filterCategory('${cat.id}')" 
+                        class="px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all ${
+                            selectedCategory === cat.id 
+                            ? 'bg-amber-500 text-white shadow-md shadow-amber-200' 
+                            : 'bg-slate-100 text-slate-600 hover:bg-amber-100 hover:text-amber-800'
+                        }">
+                    ${cat.label}
+                </button>
+            `).join('');
+        }
+
+        function filterCategory(catId) {
+            selectedCategory = catId;
+            renderCategoryTabs();
+            renderStrawCards();
+        }
+
+        // Render Straw Cards Grid
+        function renderStrawCards() {
+            const container = document.getElementById('straw-cards-container');
+            const filteredData = selectedCategory === 'all' 
+                ? STRAW_DATA 
+                : STRAW_DATA.filter(item => item.category === selectedCategory);
+
+            container.innerHTML = filteredData.map(straw => `
+                <div class="rounded-3xl p-5 border ${straw.borderColor} ${straw.bgGradient} flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-3xl">${straw.icon}</span>
+                            <span class="text-xs font-black text-amber-900 bg-white/80 px-2.5 py-1 rounded-full shadow-xs">
+                                개당 ${straw.price}원
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">${straw.name}</h3>
+                        <p class="text-xs text-slate-600 mb-4 leading-relaxed">${straw.desc}</p>
+                        
+                        <!-- Flavor Selection Pills -->
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-slate-700 mb-2">선택 가능한 맛:</label>
+                            <div class="flex flex-wrap gap-1.5" id="flavors-${straw.id}">
+                                ${straw.flavors.map((f, idx) => `
+                                    <button type="button" 
+                                            onclick="selectFlavor('${straw.id}', '${f.name}', this)"
+                                            class="flavor-btn-${straw.id} text-xs px-2.5 py-1 rounded-xl font-semibold border border-amber-200/60 bg-white/90 text-slate-700 hover:bg-amber-50 transition ${idx === 0 ? 'ring-2 ring-amber-500 bg-amber-50' : ''}">
+                                        ${f.name}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="bg-white/60 rounded-xl p-2.5 text-[11px] text-slate-600 space-y-1 mb-4 border border-white/80">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">유지시간:</span>
+                                <span class="font-bold">${straw.durability}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">식감:</span>
+                                <span class="font-bold">${straw.texture}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="addToCartFromCard('${straw.id}')" class="w-full py-2.5 bg-slate-900 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1">
+                        <i data-lucide="plus" class="w-4 h-4"></i> 장바구니 담기
+                    </button>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // Active flavor tracking per card
+        const selectedFlavors = {
+            rice: '누룽지맛',
+            candy: '딸기맛',
+            jelly: '포도맛',
+            coffee: '은은한 커피향'
+        };
+
+        function selectFlavor(strawId, flavorName, btnEl) {
+            selectedFlavors[strawId] = flavorName;
+            const buttons = document.querySelectorAll(`.flavor-btn-${strawId}`);
+            buttons.forEach(b => {
+                b.classList.remove('ring-2', 'ring-amber-500', 'bg-amber-50');
             });
-
-            renderMenuList();
+            btnEl.classList.add('ring-2', 'ring-amber-500', 'bg-amber-50');
         }
 
-        // 메뉴 목록 출력 함수
-        function renderMenuList() {
-            const menuListEl = document.getElementById('menuList');
-            menuListEl.innerHTML = '';
-
-            const filteredMenu = selectedCategory === "전체" 
-                ? menuData 
-                : menuData.filter(item => item.category === selectedCategory);
-
-            filteredMenu.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'menu-item';
-                div.innerText = item.name;
-                menuListEl.appendChild(div);
-            });
+        // Render Drink Recommendation Selector
+        function renderDrinkSelector() {
+            const container = document.getElementById('drink-selector');
+            container.innerHTML = DRINK_PAIRINGS.map(drink => `
+                <button onclick="showRecommendation('${drink.id}')" class="drink-btn p-4 bg-slate-50 hover:bg-amber-100/50 border border-slate-200 hover:border-amber-300 rounded-2xl transition flex flex-col items-center text-center group">
+                    <span class="text-3xl mb-2 group-hover:scale-110 transitiontransform">${drink.icon}</span>
+                    <span class="text-xs font-bold text-slate-800">${drink.name}</span>
+                </button>
+            `).join('');
         }
 
-        // 랜덤 메뉴 뽑기 함수 (애니메이션 효과)
-        function pickRandomMenu() {
-            if (isSpinning) return;
-
-            const filteredMenu = selectedCategory === "전체" 
-                ? menuData 
-                : menuData.filter(item => item.category === selectedCategory);
-
-            if (filteredMenu.length === 0) return;
-
-            isSpinning = true;
-            const resultTitle = document.getElementById('resultTitle');
-            const resultCategory = document.getElementById('resultCategory');
+        function showRecommendation(drinkId) {
+            const drink = DRINK_PAIRINGS.find(d => d.id === drinkId);
+            const resultBox = document.getElementById('recommendation-result');
             
-            let counter = 0;
-            const maxCounts = 20; // 스롯모션 횟수
-            const speed = 50; // 속도 (ms)
-
-            const interval = setInterval(() => {
-                const tempPick = filteredMenu[Math.floor(Math.random() * filteredMenu.length)];
-                resultTitle.innerText = tempPick.name;
-                resultCategory.style.display = "inline-block";
-                resultCategory.innerText = tempPick.category;
-                
-                counter++;
-
-                if (counter >= maxCounts) {
-                    clearInterval(interval);
-                    const finalPick = filteredMenu[Math.floor(Math.random() * filteredMenu.length)];
-                    resultTitle.innerText = finalPick.name;
-                    resultCategory.innerText = finalPick.category;
-                    isSpinning = false;
-                }
-            }, speed);
+            resultBox.classList.remove('hidden');
+            resultBox.innerHTML = `
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl bg-amber-100 p-3 rounded-2xl">${drink.icon}</div>
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">추천 꿀조합</span>
+                        <h4 class="text-base font-bold text-slate-800">${drink.name} + <span class="text-amber-600">${drink.recommendedStraw}</span></h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">${drink.reason}</p>
+                    </div>
+                </div>
+            `;
         }
 
-        // 초기 화면 설정
-        renderMenuList();
+        // Update Simulator Output
+        function updateSimulatorFeedback() {
+            const strawType = document.getElementById('sim-straw-select').value;
+            const minutes = parseInt(document.getElementById('sim-time-range').value);
+            const timeText = document.getElementById('sim-time-text');
+            const feedbackContainer = document.getElementById('sim-feedback-content');
+
+            // Find nearest time key
+            let key = 0;
+            if (minutes >= 60) key = 60;
+            else if (minutes >= 30) key = 30;
+            else if (minutes >= 15) key = 15;
+            else key = 0;
+
+            const simInfo = SIMULATION_DATA[strawType][key];
+
+            timeText.innerText = `${minutes}분 경과 (${key === 0 ? '막 음료에 넣음' : key + '분 시점 질감'})`;
+
+            feedbackContainer.innerHTML = `
+                <div class="text-5xl animate-bounce">${simInfo.emoji}</div>
+                <div class="inline-block bg-amber-100 text-amber-800 font-extrabold text-xs px-3 py-1 rounded-full">
+                    상태: ${simInfo.state}
+                </div>
+                <p class="text-sm font-semibold text-slate-700 max-w-md mx-auto">
+                    "${simInfo.text}"
+                </p>
+            `;
+        }
+
+        // Cart Logic
+        function addToCartFromCard(strawId) {
+            const straw = STRAW_DATA.find(s => s.id === strawId);
+            const flavor = selectedFlavors[strawId] || straw.flavors[0].name;
+
+            const existingIndex = cart.findIndex(item => item.id === strawId && item.flavor === flavor);
+
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity += 1;
+            } else {
+                cart.push({
+                    id: strawId,
+                    name: straw.name,
+                    flavor: flavor,
+                    price: straw.price,
+                    quantity: 1
+                });
+            }
+
+            updateCartUI();
+            showToast(`'${straw.name} (${flavor})'가 장바구니에 담겼습니다!`);
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.innerText = totalCount;
+
+            const itemsContainer = document.getElementById('cart-items-container');
+            const totalPriceEl = document.getElementById('cart-total-price');
+            const ecoPlasticSaved = document.getElementById('eco-plastic-saved');
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 text-xs">
+                        장바구니가 비어 있습니다. 빨대를 추가해 보세요!
+                    </div>
+                `;
+                totalPriceEl.innerText = '0원';
+                ecoPlasticSaved.innerText = '0';
+                return;
+            }
+
+            let totalPrice = 0;
+            itemsContainer.innerHTML = cart.map((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                totalPrice += itemTotal;
+                return `
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">${item.name}</h4>
+                            <span class="text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
+                                ${item.flavor}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center border border-slate-200 rounded-lg bg-white">
+                                <button onclick="changeQuantity(${index}, -1)" class="px-2 py-0.5 text-slate-500 hover:text-slate-800 font-bold text-xs">-</button>
+                                <span class="px-2 text-xs font-bold text-slate-700">${item.quantity}</span>
+                                <button onclick="changeQuantity(${index}, 1)" class="px-2 py-0.5 text-slate-500 hover:text-slate-800 font-bold text-xs">+</button>
+                            </div>
+                            <span class="text-xs font-bold text-slate-800 w-14 text-right">${itemTotal.toLocaleString()}원</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalPriceEl.innerText = `${totalPrice.toLocaleString()}원`;
+            // Calculate plastic saved (approx 1.5g per straw)
+            const plasticSavedGrams = (totalCount * 1.5).toFixed(1);
+            ecoPlasticSaved.innerText = plasticSavedGrams;
+        }
+
+        function changeQuantity(index, delta) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        function openCartModal() {
+            updateCartUI();
+            document.getElementById('cart-modal').classList.remove('hidden');
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').classList.add('hidden');
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('장바구니가 비어 있습니다.');
+                return;
+            }
+            showToast('🎉 주문이 완료되었습니다! (시뮬레이션)');
+            cart = [];
+            updateCartUI();
+            closeCartModal();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
     </script>
 </body>
 </html>
